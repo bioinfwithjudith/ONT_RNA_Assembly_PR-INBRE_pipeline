@@ -1,12 +1,77 @@
-# ONT dRNA-Seq Anakysis: Assembly and Differential Expression
+# Facilitating an ONT Direct RNA-Seq Transcriptomic Analysis Workflow
 
-PR-INBRE 
+ONT Direct RNA-seq workflows can be complex and readily adapted for use on the Boquerón Cluster; therefore, establishing a reproducible and accessible pipeline to facilitate transcript quantification and other downstream transcriptomic analyses for long read RNA-seq.
 
-## Introduction
+Develop a pipeline using programs available on the Boquerón Cluster to perform transcript quantification/abundance from Direct ONT RNA-seq samples. The programs that you will find in this pipeline include data download, basecalling, quality control such as filtering of reads, reference-based alignment and assembly, and differential expression.
 
-Explain what we are doing and what this readme file will discuss.
+This pipeline is designed for PR-INBRE Researchers. PR-INBRE is a network across Puerto Rico biomedical scientists from all levels. We hope to soon convert this into a nextflow pipeline. Please visit their website here: https://inbre.hpcf.upr.edu/ and check them out! :) 
+
+## Content
+- [A quick rundown about Oxford Nanopore Sequencing](#a-quick-rundown-about-oxford-nanopore-sequencing)
+- [Workflow](#workflow)
+- [Data download](#data-download)
+- [Basecalling](#basecalling)
+- [Perform quality control using Filtlong to filter low quality reads](#perform-quality-control-using-filtlong-to-filter-low-quality-reads)
+- [Reference-based alignment using minimap2](#reference-based-alignment-using-minimap2)
+- [Assembly using Stringtie2](#assembly-using-stringtie2)
+
+
+## A quick rundown about Oxford Nanopore Sequencing
+
+### Oxford Nanopore Long Read Sequencing
+
+Oxford Nanopore is a third generation sequencer that generates direct reads of DNA and RNA in real-time without the need of labels by the detection of ionic changes given by the molecule sequence when read by the nanopores.
+
+There are three categories of nanopore sequencing:
+- cDNA sequencing (based using reverse transcriptase)
+- Direct DNA sequencing (great for sequencing native genomic information)
+- Direct RNA sequencing (great for sequencing native RNA molecules)
+
+### Advantage and disadvantages of using Oxford Nanopore Long Read Direct RNA Sequencing (dRNA)
+
+Pros:
+- RNA modifications preserved which facilitates epitranscriptomic, mRNA processes, RNA splicing, and exitron studies
+- RNA abundance and expression at the gene and transcript level 
+- Isoform identification 
+- Transcript discovery
+- Gene fusion
+- No need for extra steps such as reverse transcriptase and PCR which can generate artifacts such as “falsitrons” (examples look here: 34183059) the polyadenylated molecules are directly sequenced (34183059)
+
+Cons:
+- Pores can get clogged from fragmented RNA molecules
+- bacterial transcript lack a Poly(A) tail
+
+### Examples of Oxford Nanopore long read dRNA platforms 
+
+- gridION (capable of running five minion flowcells in parallel)
+- Flongle adapter (smaller scale experiments)
+- promethION (High throughput, great for larger genomes)
+- MinION 1 million reads/sample (probably better for smaller genomes like E. coli, portable)
+  - MK1B (USB)
+  - MK1C (Touchscreen, internet connection, GPU and CPU integration)
+  - MK1D (USB-C, Enhanced temperature control (10-35C))
+
+## Workflow
+
+![workflow_fig](figures/workflow.png)
 
 ## Data download
+
+Direct RNA duplex sequencing of S. cerevisiae
+
+Experiment: ribosomal RNA of two  ribosomal RNA of two S. cerevisiae strains are sequenced containing a known (by the researchers) RNA modification
+Library name: RDMIN20240308-Mk1C_fast5
+Platform: ONT, RNA004 Kit
+Strategy: RNA-seq
+Source: Transcriptomic
+Selection: PolyAdenylation and Polyuridylation
+Layout: Single
+
+NCBI Information:
+Bioproject: PRJNA1150648, Duplexed Direct RNA Sequencing Protocol Using Polyadenylation and Polyuridylation
+Biosample: SAMN43293683
+SRA: SRR30335016, Spots: 5.8M, Bases: 2.8G, 2.6GB, GC content: 47.2%
+https://trace.ncbi.nlm.nih.gov/Traces/?run=SRR30335016 
 
 Dataset was successfully downloaded to the Boquerón Cluster (https://www.hpcf.upr.edu/documentation/boqueron/) using the following command:
 
@@ -18,7 +83,6 @@ cd /local/jrodriguez4/pod5
 ```
 wget https://sra-pub-src-1.s3.amazonaws.com/SRR30335016/20240308_Scerevisiae_duplex_004_pod5.tar.gz.1 
 ```
-
 
 ## Basecalling
 
@@ -160,9 +224,9 @@ module load albacore/2.3.4 
 ```
 NanoPlot --prefix SRR30335016_filtlong_min_length_800_mean_q_8_ --fastq SRR30335016_filtlong_min_length_800.fastq --N50 --threads 32
 ```
-### Read Filtering Summary (by Minimum Length)
+### Read Filtering Summary (by Minimum Length and Quality Phred Score)
 
-| Min Length | Min Length | Mean Read Length | Mean Read Quality | Total Reads | Total Bases | Read Length N50 |
+| Min Length | Min mean q | Mean Read Length | Mean Read Quality | Total Reads | Total Bases | Read Length N50 |
 |------------|------------|------------------|-------------------|----------------|-------------|-----------------|
 | 800       | 8       | 1,672.1          | 9.7               | 1,129,147.0       | 1,888,073,600   | 1,760.0           |
 | 1000      | 7       | 1,856.2          | 9.8              | 1,694,922,252       | 7,628,283   | 1,885.0           |
@@ -175,6 +239,11 @@ We need to align our ONT dRNA-seq reads in order to assemble them using Stringti
 ### Reference used
 
 Firstly, I need a reference to align my reads. I am using the following dataset: https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_000146045.2/
+
+![reference_genome_fig](figures/reference_genome.png)
+
+Now make sure that you have all that you need. You will download from RefSeq for Genome sequences (FASTA) and Annotation Features (GTF). 
+![download_fig](figures/download.png)
 
 ### minimap2
 
