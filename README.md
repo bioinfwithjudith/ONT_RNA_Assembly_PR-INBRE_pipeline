@@ -14,6 +14,7 @@ This pipeline is designed for PR-INBRE Researchers. PR-INBRE is a network across
 - [Perform quality control using Filtlong to filter low quality reads](#perform-quality-control-using-filtlong-to-filter-low-quality-reads)
 - [Reference-based alignment using minimap2](#reference-based-alignment-using-minimap2)
 - [Assembly using Stringtie2](#assembly-using-stringtie2)
+- [Nextflow version](#Nextflow-version-of-the-above-discussion)
 
 
 ## A quick rundown about Oxford Nanopore Sequencing
@@ -327,7 +328,11 @@ tximport and deseq2
 canu -p SRR30335016_Scerevisiae -d canu_error_correction_nanopore_test_after_filtlong_minlen_800_assembly genomeSize=28m -nanopore ../SRR30335016_filtlong_min_len_800_on_fastq_complete_data_download/SRR30335016_filtlong_min_length_800.fastq
 ```
 
+## Nextflow version of the above discussion
 
+To review current status of nextflow pipeline, please execute `nextflow run main.nf -preview`
+
+Or refer to the code here: https://github.com/bioinfwithjudith/ONT_RNA_Assembly_PR-INBRE_pipeline/tree/nf_pipeline/nextflow_pipeline 
 
 
 
