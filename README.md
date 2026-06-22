@@ -332,7 +332,7 @@ canu -p SRR30335016_Scerevisiae -d canu_error_correction_nanopore_test_after_fil
 
 To review current status of nextflow pipeline, please execute `nextflow run main.nf -preview`
 
-Or refer to the code here: https://github.com/bioinfwithjudith/ONT_RNA_Assembly_PR-INBRE_pipeline/tree/main/genome_expression_nexrflow_pipeline 
+Or refer to the code here: https://github.com/bioinfwithjudith/ONT_RNA_Assembly_PR-INBRE_pipeline/tree/main/genome_expression_nextflow_pipeline 
 
 
 
