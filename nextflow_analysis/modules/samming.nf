@@ -24,26 +24,26 @@ process SAM_TO_BAM {
 }
 
 //
-process SAM_SORT_PLEASE {
+process BAM_SORT_PLEASE {
 
         tag "$sample_id"
 
         publishDir "${params.outdir}/minimap2", mode: "copy"
 
         input:
-        tuple val(sample_id), path(sam)
+        tuple val(sample_id), path(bam)
 
         output:
         tuple val(sample_id), path("${sample_id}_alignment.sorted.bam")
 
         script:
         """
-	samtools sort -o ${sample_id}_alignment.sorted.bam $sam 
-	"""
+		samtools sort -o ${sample_id}_alignment.sorted.bam $bam 
+		"""
 }
 
 
-process SAM_INDEX_PLEASE {
+process BAM_INDEX_PLEASE {
 
         tag "$sample_id"
 
@@ -61,3 +61,20 @@ process SAM_INDEX_PLEASE {
         """
 }
 
+process BAM_COLLATE_PLEASE {
+
+        tag "$sample_id"
+
+        publishDir  "${params.outdir}/minimap2", mode: "copy"
+
+        input:
+        tuple val(sample_id), path(bam)
+
+        output:
+        tuple val(sample_id), path("${sample_id}_alignment.collated.bam")
+
+        script:
+        """
+        samtools collate -o ${sample_id}_alignment.collated.bam $bam
+        """
+}
