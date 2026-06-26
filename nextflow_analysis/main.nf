@@ -24,8 +24,8 @@ workflow {
 	// use samtools to convert sam file generated with MINIMAP2_ALIGN process to a sorted.bam file as input for stringtie2
 	bam_ch = SAM_TO_BAM(minimap2_ch)
 	collate_bam_ch = BAM_COLLATE_PLEASE(bam_ch)
-	//sort_bam_ch = SAM_SORT_PLEASE(bam_ch)
-	//SAM_INDEX_PLEASE(sort_bam_ch)
+	//sort_bam_ch = BAM_SORT_PLEASE(bam_ch)
+	//BAM_INDEX_PLEASE(sort_bam_ch)
 
     // quantify aligned ONT reads using salmon
     OARFISH_QUANTIFY(collate_bam_ch)
