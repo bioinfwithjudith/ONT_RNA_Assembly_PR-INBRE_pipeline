@@ -19,7 +19,7 @@ process MINIMAP2_ALIGNMENT {
 
 	script:
 	"""
-	minimap2 -ax splice ${params.reference_rna} $reads > ${sample_id}_alignment.sam
+    minimap2 -ax splice -uf --secondary=no ${params.reference_rna} $reads > ${sample_id}_alignment.sam
 	"""
 }
 
