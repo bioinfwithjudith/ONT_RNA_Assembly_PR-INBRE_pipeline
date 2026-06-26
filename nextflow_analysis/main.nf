@@ -4,7 +4,7 @@ nextflow.enable.dsl=2
 
 include { FILTLONG_FILTER } from './modules/filter.nf'
 include { MINIMAP2_ALIGNMENT } from './modules/alignment.nf'
-include { SAM_TO_BAM; SAM_SORT_PLEASE; SAM_INDEX_PLEASE } from "./modules/samming.nf"
+include { SAM_TO_BAM; BAM_SORT_PLEASE; BAM_INDEX_PLEASE; BAM_COLLATE_PLEASE } from "./modules/samming.nf"
 include { OARFISH_QUANTIFY } from "./modules/quantification.nf"
 
 workflow {
@@ -23,10 +23,11 @@ workflow {
 
 	// use samtools to convert sam file generated with MINIMAP2_ALIGN process to a sorted.bam file as input for stringtie2
 	bam_ch = SAM_TO_BAM(minimap2_ch)
+	collate_bam_ch = BAM_COLLATE_PLEASE(bam_ch)
 	//sort_bam_ch = SAM_SORT_PLEASE(bam_ch)
 	//SAM_INDEX_PLEASE(sort_bam_ch)
 
-        // quantify aligned ONT reads using salmon
-        OARFISH_QUANTIFY(bam_ch)
+    // quantify aligned ONT reads using salmon
+    OARFISH_QUANTIFY(collate_bam_ch)
 }
 
